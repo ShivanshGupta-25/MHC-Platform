@@ -1,36 +1,38 @@
-# from transformers import GPT2Tokenizer, GPT2LMHeadModel
-# import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
+import torch
 
 class CoreController:
     def __init__(self):
         # Load tokenizer and model
-        self.tokenizer = GPT2Tokenizer.from_pretrained("gpt2-xl")
-        self.model = GPT2LMHeadModel.from_pretrained("gpt2-xl")
+        model_name = "NousResearch/Nous-Hermes-2-Mistral-7B-DPO"
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            device_map="auto",  # Will auto-select GPU if available
+            torch_dtype=torch.float16  # Use float16 for memory efficiency
+        )
         self.model.eval()
 
-        # Use CUDA if available
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.model.to(self.device)
+    def conv(self, user_input, max_new_tokens=200):
+        # Format input as chat/instruction prompt
+        system_prompt = "You are a compassionate, supportive mental health assistant. Provide thoughtful and safe responses to help the user."
+        prompt = f"<s>[INST] {system_prompt}\nUser: {user_input} [/INST]"
 
-    def conv(self, user_input, max_length=150):
-        # Prepend with a simple conversational context
-        prompt = f"The following is a conversation with a compassionate mental health chatbot.\nUser: {user_input}\nChatbot:"
-
-        inputs = self.tokenizer.encode(prompt, return_tensors="pt").to(self.device)
+        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
 
         with torch.no_grad():
             outputs = self.model.generate(
-                inputs,
-                max_length=inputs.shape[1] + max_length,
+                **inputs,
+                max_new_tokens=max_new_tokens,
                 temperature=0.7,
                 top_p=0.9,
-                pad_token_id=self.tokenizer.eos_token_id,
-                do_sample=True
+                do_sample=True,
+                pad_token_id=self.tokenizer.eos_token_id
             )
 
         response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
 
-        # Extract only the chatbot's response
-        if "Chatbot:" in response:
-            response = response.split("Chatbot:")[-1].strip()
+        # Post-processing: extract only the assistant’s message
+        if "[/INST]" in response:
+            response = response.split("[/INST]")[-1].strip()
         return response
