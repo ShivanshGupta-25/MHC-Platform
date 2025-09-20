@@ -1,27 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/output.css')}}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Mental Wellness Platform</title>
-</head>
-<body class="bg-gray-50 text-gray-900">
+{% extends 'components/base.html' %}
+{% block title %}
+Mental Wellness Platform
+{% endblock title %}
+{% block body %}
+<div class="bg-gray-50 text-gray-900">
 
   <!-- Navbar -->
   <header class="bg-white shadow-md fixed w-full z-10">
     <div class="container mx-auto flex justify-between items-center px-6 py-4">
+      <!-- Logo -->
       <h1 class="flex items-center space-x-2 text-2xl font-bold text-blue-600">
         <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="h-10">
         <span>Mental Wellness Platform</span>
       </h1>
+
+      <!-- Toggle button (hamburger) -->
+      <button id="menu-btn" class="md:hidden focus:outline-none">
+        <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+
+      <!-- Nav menu -->
       <nav>
-        <ul class="flex space-x-6 items-center">
+        <ul id="menu"
+          class="hidden flex-col space-y-4 absolute top-20 left-0 w-full bg-white px-6 py-4 shadow-md md:flex md:flex-row md:space-y-0 md:space-x-6 md:items-center md:static md:bg-transparent md:shadow-none">
           <li><a href="#home" class="hover:text-blue-600 font-medium">Home</a></li>
           <li><a href="#about" class="hover:text-blue-600 font-medium">About</a></li>
-          <li><a href="/signup" class="hover:text-blue-600 font-medium">Sign Up</a></li>
-          <li><a href="/login" class="hover:text-blue-600 font-medium">Login</a></li>
-          <li><a href="/signup" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Get Started</a></li>
+          <li><a href="{{url_for('signup')}}" class="hover:text-blue-600 font-medium">Sign Up</a></li>
+          <li><a href="{{url_for('login')}}" class="hover:text-blue-600 font-medium">Login</a></li>
+          <li>
+            <a href="{{url_for('signup')}}"
+              class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 block text-center md:inline-block">Get
+              Started</a>
+          </li>
         </ul>
       </nav>
     </div>
@@ -37,7 +51,6 @@
         <p class="mt-4 text-lg text-gray-600">
           Overcome stigma, connect with support, and take care of your mind with Mental Wellness Platform.
         </p>
-        </a>
       </div>
     </div>
   </section>
@@ -47,18 +60,17 @@
     <div class="container mx-auto px-6 text-center">
       <h3 class="text-3xl font-semibold text-gray-800">About Us</h3>
       <p class="mt-4 max-w-2xl mx-auto text-gray-600">
-        This is an AI-powered Wellness platform that helps youth
-        break the stigma around mental health, offering support through personalized resources and guidance.
+        This is an AI-powered Wellness platform that helps youth break the stigma around mental health,
+        offering support through personalized resources and guidance.
       </p>
     </div>
   </section>
 
-  <!-- features Section -->
+  <!-- Features Section -->
   <section id="services" class="py-16 bg-gray-100">
     <div class="container mx-auto px-6 text-center">
-      <h3 class="text-3xl font-semibold text-gray-800">Our features</h3>
-      <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- feature -->
+      <h3 class="text-3xl font-semibold text-gray-800">Our Features</h3>
+      <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg">
           <h4 class="text-xl font-bold text-blue-600">AI Chatbot</h4>
           <p class="mt-2 text-gray-600">Confidential, empathetic support available 24/7.</p>
@@ -71,7 +83,6 @@
           <h4 class="text-xl font-bold text-blue-600">Guided Wellness Activities</h4>
           <p class="mt-2 text-gray-600">AI support with guided exercises to build emotional well-being and resilience.</p>
         </div>
-        
       </div>
     </div>
   </section>
@@ -80,7 +91,8 @@
   <section id="get-started" class="py-16 bg-gradient-to-r from-blue-600 to-blue-800 text-white text-center">
     <h3 class="text-3xl font-semibold">Take the First Step Towards Mental Wellness</h3>
     <p class="mt-4 text-lg">Join Us today and start your journey.</p>
-    <a href="/signup" class="mt-6 inline-block bg-white text-blue-700 px-6 py-3 rounded-lg hover:bg-gray-100 font-semibold">
+    <a href="{{url_for('signup')}}"
+      class="mt-6 inline-block bg-white text-blue-700 px-6 py-3 rounded-lg hover:bg-gray-100 font-semibold">
       Sign Up Now
     </a>
   </section>
@@ -88,15 +100,23 @@
   <!-- Footer -->
   <footer class="bg-gray-900 text-white py-6 mt-12">
     <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
-     
       <div class="flex space-x-4 mt-4 md:mt-0">
-        <div class="flex space-x-4 mt-4 md:mt-0">
-          <a href="#" class="hover:text-blue-400">Privacy Policy</a>
-          <a href="#" class="hover:text-blue-400">Terms of Service</a>
-        </div>
+        <a href="#" class="hover:text-blue-400">Privacy Policy</a>
+        <a href="#" class="hover:text-blue-400">Terms of Service</a>
       </div>
     </div>
   </footer>
 
-</body>
-</html>
+  <!-- JS to toggle navbar -->
+  <script>
+    const menuBtn = document.getElementById('menu-btn');
+    const menu = document.getElementById('menu');
+
+    menuBtn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  </script>
+
+</div>
+  
+{% endblock body %}
