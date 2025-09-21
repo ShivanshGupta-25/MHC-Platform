@@ -21,7 +21,7 @@ class LoginController:
                 session['user_id'] = user.id
                 session['user_email'] = user.email
                 flash('Logged in successfully!', 'success')
-                return redirect(url_for('home'))
+                return redirect(url_for('dashboard'))
             else:
                 flash('Invalid email or password', 'error')
                 return redirect(url_for('login'))

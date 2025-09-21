@@ -3,18 +3,18 @@ import torch
 
 class CoreController:
     def __init__(self):
-        # Load tokenizer and model
-        model_name = "NousResearch/Nous-Hermes-2-Mistral-7B-DPO"
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        # model_name = "NousResearch/Nous-Hermes-2-Mistral-7B-DPO"
+        model_name = "gpt2"
+        # Disable fast tokenizer to avoid conversion errors
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=False)
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
-            device_map="auto",  # Will auto-select GPU if available
-            torch_dtype=torch.float16  # Use float16 for memory efficiency
+            device_map="auto",
+            torch_dtype=torch.float16
         )
         self.model.eval()
 
     def conv(self, user_input, max_new_tokens=200):
-        # Format input as chat/instruction prompt
         system_prompt = "You are a compassionate, supportive mental health assistant. Provide thoughtful and safe responses to help the user."
         prompt = f"<s>[INST] {system_prompt}\nUser: {user_input} [/INST]"
 
@@ -31,8 +31,6 @@ class CoreController:
             )
 
         response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-
-        # Post-processing: extract only the assistant’s message
         if "[/INST]" in response:
             response = response.split("[/INST]")[-1].strip()
         return response
