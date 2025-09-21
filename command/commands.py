@@ -240,7 +240,7 @@ def migrate_init():
         print("✅ Migration directory initialized.")
 
 
-def migrate_commit_and_apply():
+def migrate_commit_and_apply(message):
     print("🔍 Attempting to upgrade database to latest version...")
     try:
         upgrade()
@@ -273,7 +273,7 @@ def migrate_commit_and_apply():
 
     # Only proceed to autogenerate if upgrade was successful or handled
     print("\n📝 Checking for schema changes and generating new migration script...")
-    commit_msg = input("Enter migration commit message (e.g., 'Added user table', leave empty for auto): ").strip()
+    commit_msg = message if message and message != "Default migration message" else None
     try:
         # Autogenerate will only create a script if there are actual model changes
         migrate(message=commit_msg or "Auto migration")

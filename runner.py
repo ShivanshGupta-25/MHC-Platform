@@ -59,7 +59,9 @@ def cli():
     parser_admin.add_argument("post", help="Admin post (default: Core Member)", nargs='?', default="Core Member")
 
     subparsers.add_parser("migrate:init", help="Initialize migration directory")
+
     subparsers.add_parser("migrate", help="Generate migration script and upgrade DB")
+    parser_admin.add_argument("message", help="To add migration message", nargs='?', default="Default migration message")
     
     parser_drop = subparsers.add_parser("migrate:drop", help="Drop tables from the database")
     parser_drop.add_argument("target", help="'all' or model name (e.g., Admin, User)")
@@ -98,7 +100,7 @@ def cli():
     elif args.command == "migrate":
         app = create_app()
         with app.app_context():
-            migrate_commit_and_apply()
+            migrate_commit_and_apply(args.message)
 
     elif args.command == "create:template":
         print(f"🖼️ Creating template: {args.name}")
