@@ -27,5 +27,9 @@ SQLAlchemy-Utils==0.41.2
 typing_extensions==4.14.0
 Werkzeug==3.1.3
 WTForms==3.2.1
-transformers 
+transformers
+tiktoken
 torch
+blobfile
+accelerate
+sentencepiece

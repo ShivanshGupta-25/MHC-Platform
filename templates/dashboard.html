@@ -31,7 +31,7 @@ Mental Wellness Platform
     <section class="bg-white shadow-lg rounded-2xl p-6 hover:shadow-xl transition">
       <h3 class="text-xl font-semibold text-indigo-600 mb-3">💬 AI Chatbot</h3>
       <p class="text-gray-600 mb-4">Talk with our empathetic AI assistant 24/7 — always here to listen, guide, and support.</p>
-      <button id="chatbotBtn" class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600">Start Chat</button>
+      <button id="chatbotBtn" onclick="window.location.href='{{ url_for('chatbot') }}';" class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600">Start Chat</button>
     </section>
 
     <!-- Mindfulness Meditation -->
@@ -76,68 +76,12 @@ Let calming tunes and mindful beats guide you to a better headspace.</p>
     💬
   </button>
 
-  <!-- Chatbot Window -->
-  <div id="chatbotWindow" class="hidden fixed bottom-20 right-6 w-80 bg-white shadow-2xl rounded-2xl overflow-hidden">
-    <div class="bg-indigo-600 text-white p-4 flex justify-between items-center">
-      <h4 class="font-semibold">AI Chatbot 🌸</h4>
-      <button id="closeChat" class="text-white text-lg">✖</button>
-    </div>
-    <div id="chatMessages" class="h-64 p-4 overflow-y-auto text-sm text-gray-700 space-y-2">
-      <p class="bg-indigo-100 p-2 rounded-lg w-fit">Hi! I'm here to listen 💜</p>
-    </div>
-    <div class="p-3 flex border-t">
-      <input id="chatInput" type="text" placeholder="Type a message..." 
-        class="flex-grow border rounded-lg px-3 py-2 text-sm focus:outline-none">
-      <button id="sendMsg" class="ml-2 bg-indigo-600 text-white px-4 rounded-lg">Send</button>
-    </div>
-  </div>
-
   <!-- Footer -->
   <footer class="bg-gray-900 text-white py-6 mt-12">
     <div class="container mx-auto px-6 flex flex-row md:flex-row justify-between items-center">
       <p class="text-center text-gray-500">Team TechGenics</p>
     </div>
   </footer>
-
-  <!-- JS for Chatbot -->
-  <script>
-    const chatbotBtn = document.getElementById('chatbotBtn');
-    const chatbotWindow = document.getElementById('chatbotWindow');
-    const closeChat = document.getElementById('closeChat');
-    const sendMsg = document.getElementById('sendMsg');
-    const chatInput = document.getElementById('chatInput');
-    const chatMessages = document.getElementById('chatMessages');
-
-    chatbotBtn.addEventListener('click', () => {
-      chatbotWindow.classList.remove('hidden');
-    });
-
-    closeChat.addEventListener('click', () => {
-      chatbotWindow.classList.add('hidden');
-    });
-
-    sendMsg.addEventListener('click', () => {
-      const msg = chatInput.value.trim();
-      if (msg) {
-        const userMsg = document.createElement('p');
-        userMsg.className = "bg-gray-200 p-2 rounded-lg w-fit self-end ml-auto";
-        userMsg.textContent = msg;
-        chatMessages.appendChild(userMsg);
-
-        // Auto-reply (demo)
-        setTimeout(() => {
-          const botMsg = document.createElement('p');
-          botMsg.className = "bg-indigo-100 p-2 rounded-lg w-fit";
-          botMsg.textContent = "💡 I hear you. Let's work through this together.";
-          chatMessages.appendChild(botMsg);
-          chatMessages.scrollTop = chatMessages.scrollHeight;
-        }, 800);
-
-        chatInput.value = "";
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
-    });
-  </script>
 </body>
 </html>
 {% endblock body %}

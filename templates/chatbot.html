@@ -5,185 +5,256 @@ Mental Wellness Platform
 {% block body %}
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      position: relative;
-      background: linear-gradient(-45deg, #ff7c7c, #ff9a8b, #4caf50, #00bcd4);
-      background-size: 400% 400%;
-      animation: gradientBG 20s ease infinite;
-    }
+  body {
+    font-family: 'Poppins', sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(-45deg, #ff7c7c, #ff9a8b, #4caf50, #00bcd4);
+    background-size: 400% 400%;
+    animation: gradientBG 20s ease infinite;
+  }
 
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      25% { background-position: 50% 100%; }
-      50% { background-position: 100% 50%; }
-      75% { background-position: 50% 0%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Navbar */
-    .navbar {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      padding: 15px;
-      background-color: rgba(0, 0, 0, 0.7);
-      color: white;
-      text-align: center;
-      font-size: 18px;
-      z-index: 20;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .navbar h1 {
-      font-weight: bold;
-      color: #ff9a8b;
-      font-size: 20px;
-    }
-    .navbar a {
-      color: white;
-      text-decoration: none;
-      margin: 0 15px;
-      font-weight: bold;
-    }
-    .logout {
-      background-color: #e74c3c;
-      color: white;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
+  @keyframes gradientBG {
+    0% {
+      background-position: 0% 50%;
     }
 
-    /* Floating emojis */
-    .floating-symbols-area {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: 1;
+    25% {
+      background-position: 50% 100%;
     }
-    .floating-symbol {
-      position: absolute;
-      font-size: 2.2rem;
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    75% {
+      background-position: 50% 0%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* Navbar */
+  .navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    z-index: 20;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .navbar h1 {
+    font-weight: bold;
+    color: #ff9a8b;
+    font-size: 20px;
+  }
+
+  .navbar a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+  }
+
+  .logout {
+    background-color: #e74c3c;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  /* Floating emojis */
+  .floating-symbols-area {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .floating-symbol {
+    position: absolute;
+    font-size: 2.2rem;
+    opacity: 0;
+    animation: float linear infinite, fadeInOut ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0% {
+      transform: translate(var(--start-x), var(--start-y)) scale(0.6);
+    }
+
+    100% {
+      transform: translate(var(--end-x), var(--end-y)) scale(1.2);
+    }
+  }
+
+  @keyframes fadeInOut {
+    0% {
       opacity: 0;
-      animation: float linear infinite, fadeInOut ease-in-out infinite;
-    }
-    @keyframes float {
-      0% { transform: translate(var(--start-x), var(--start-y)) scale(0.6); }
-      100% { transform: translate(var(--end-x), var(--end-y)) scale(1.2); }
-    }
-    @keyframes fadeInOut {
-      0% { opacity: 0; }
-      10% { opacity: 0.5; }
-      50% { opacity: 1; }
-      90% { opacity: 0.5; }
-      100% { opacity: 0; }
     }
 
-    /* Chatbot block */
-    .chat-wrapper {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 70px; /* space for navbar */
-      z-index: 5;
-    }
-    .chat-block {
-      width: 90%;
-      max-width: 600px;
-      height: 80%;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(12px);
-      border-radius: 24px;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-      animation: fadeIn 1s ease;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
+    10% {
+      opacity: 0.5;
     }
 
-    /* Chat messages */
-    .chat-container {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .chat-message {
-      padding: 12px 18px;
-      border-radius: 18px;
-      max-width: 75%;
-      font-size: 15px;
-      word-wrap: break-word;
-      animation: popIn 0.3s ease;
-    }
-    @keyframes popIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    .chat-bot {
-      align-self: flex-start;
-      background: rgba(76, 175, 80, 0.9);
-      color: white;
-      border-top-left-radius: 0;
-    }
-    .chat-user {
-      align-self: flex-end;
-      background: rgba(0, 188, 212, 0.9);
-      color: white;
-      border-top-right-radius: 0;
-    }
-    .chat-message:hover {
-      transform: scale(1.03);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-      transition: 0.3s;
+    50% {
+      opacity: 1;
     }
 
-    /* Input */
-    .input-area {
-      padding: 15px;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      background: rgba(255, 255, 255, 0.12);
-      border-top: 1px solid rgba(255,255,255,0.2);
+    90% {
+      opacity: 0.5;
     }
-    .input-box {
-      flex: 1;
-      padding: 14px 20px;
-      border-radius: 25px;
-      border: none;
-      outline: none;
-      font-size: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+
+    100% {
+      opacity: 0;
     }
-    .send-button {
-      padding: 12px 20px;
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 25px;
-      cursor: pointer;
-      transition: 0.3s;
+  }
+
+  /* Chatbot block */
+  .chat-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 70px;
+    /* space for navbar */
+    z-index: 5;
+  }
+
+  .chat-block {
+    width: 90%;
+    max-width: 600px;
+    height: 80%;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    animation: fadeIn 1s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
     }
-    .send-button:hover { background-color: #45a049; }
-  </style>
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Chat messages */
+  .chat-container {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .chat-message {
+    padding: 12px 18px;
+    border-radius: 18px;
+    max-width: 75%;
+    font-size: 15px;
+    word-wrap: break-word;
+    animation: popIn 0.3s ease;
+  }
+
+  @keyframes popIn {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .chat-bot {
+    align-self: flex-start;
+    background: rgba(76, 175, 80, 0.9);
+    color: white;
+    border-top-left-radius: 0;
+  }
+
+  .chat-user {
+    align-self: flex-end;
+    background: rgba(0, 188, 212, 0.9);
+    color: white;
+    border-top-right-radius: 0;
+  }
+
+  .chat-message:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    transition: 0.3s;
+  }
+
+  /* Input */
+  .input-area {
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .input-box {
+    flex: 1;
+    padding: 14px 20px;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  }
+
+  .send-button {
+    padding: 12px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .send-button:hover {
+    background-color: #45a049;
+  }
+</style>
+
 <body>
 
   <!-- Navbar -->
@@ -213,10 +284,10 @@ Mental Wellness Platform
     </div>
   </div>
 
-<script>
+  <script>
     function randomBetween(min, max) { return Math.random() * (max - min) + min; }
 
-    const symbols = ['🤖','💬','💡','🔍','✨','🗨️','🌟','📡','🚀','💭'];
+    const symbols = ['🤖', '💬', '💡', '🔍', '✨', '🗨️', '🌟', '📡', '🚀', '💭'];
     const symbolsArea = document.getElementById('symbols-area');
 
     function createSymbol() {
@@ -259,32 +330,35 @@ Mental Wellness Platform
       userInputEl.value = '';
       chatContainer.scrollTop = chatContainer.scrollHeight;
 
-      setTimeout(() => {
-        const botEl = document.createElement('div');
-        botEl.classList.add('chat-message', 'chat-bot');
-        const lower = text.toLowerCase();
-
-        if (lower.includes('hello') || lower.includes('hi')) {
-          botEl.textContent = "Hello! 👋 How are you feeling today?";
-        } else if (lower.includes('help')) {
-          botEl.textContent = "Absolutely! What do you need help with?";
-        } else if (lower.includes('weather')) {
-          botEl.textContent = "I’m not a weather bot, but I can try to fetch something for you!";
-        } else {
-          botEl.textContent = "Interesting… tell me more 😊";
-        }
-
-        chatContainer.appendChild(botEl);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-      }, 900);
+      // 🔁 Send message to backend
+      fetch('{{url_for("send_message")}}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: text })
+      })
+        .then(response => response.json())
+        .then(data => {
+          // Create bot reply from server response
+          const botEl = document.createElement('div');
+          botEl.classList.add('chat-message', 'chat-bot');
+          botEl.textContent = data.response;
+          chatContainer.appendChild(botEl);
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
     }
 
-    userInputEl.addEventListener("keypress", function(e) {
+    userInputEl.addEventListener("keypress", function (e) {
       if (e.key === "Enter") sendMessage();
     });
 
     function logout() { alert('Logged out!'); }
   </script>
 </body>
+
 </html>
 {% endblock body %}
