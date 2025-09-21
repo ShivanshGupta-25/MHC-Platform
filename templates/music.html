@@ -1,0 +1,141 @@
+{% extends 'components/base.html' %}
+{% block title %}
+Mental Wellness Platform
+{% endblock title %}
+{% block body %}
+<script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Animated gradient background */
+    body {
+      background: linear-gradient(-45deg, #fbc2eb, #a6c1ee, #fddb92, #84fab0);
+      background-size: 400% 400%;
+      animation: gradientMove 12s ease infinite;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Smooth card hover */
+    .music-card {
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    .music-card:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Button style */
+    .btn {
+      @apply bg-white text-gray-700 font-semibold px-4 py-2 rounded-full shadow hover:bg-gray-100 transition;
+    }
+  </style>
+<body class="min-h-screen font-sans text-gray-800">
+
+  <!-- Navbar -->
+  <nav class="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-pink-600">🎵 MindCare Music</h1>
+      <a href="dashboard.html" class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700">Back</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="text-center py-12">
+    <h2 class="text-4xl font-extrabold text-white drop-shadow">Healing Through Music</h2>
+    <p class="mt-3 text-lg text-white/90">Relax, recharge, or sleep peacefully with curated playlists 🎶</p>
+  </header>
+
+  <!-- Music Categories -->
+  <main class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-10 pb-20">
+
+    <!-- Calm & Relax -->
+    <div class="music-card bg-gradient-to-br from-indigo-200 to-indigo-400 rounded-3xl shadow-lg p-8 flex flex-col items-center">
+      <h3 class="text-2xl font-bold text-indigo-900 mb-4">🎧 Calm & Relax</h3>
+      <p id="calmTitle" class="text-gray-900 mb-3 font-medium">🌸 Peaceful Mind</p>
+      <audio id="calmPlayer" controls class="w-full rounded-lg shadow-md mb-4"></audio>
+      <div class="flex gap-4">
+        <button onclick="prevTrack('calm')" class="btn">⏮ Prev</button>
+        <button onclick="nextTrack('calm')" class="btn">⏭ Next</button>
+      </div>
+    </div>
+
+    <!-- Nature Sounds -->
+    <div class="music-card bg-gradient-to-br from-green-200 to-green-400 rounded-3xl shadow-lg p-8 flex flex-col items-center">
+      <h3 class="text-2xl font-bold text-green-900 mb-4">🌿 Nature Sounds</h3>
+      <p id="natureTitle" class="text-gray-900 mb-3 font-medium">🌧️ Rain & Thunder</p>
+      <audio id="naturePlayer" controls class="w-full rounded-lg shadow-md mb-4"></audio>
+      <div class="flex gap-4">
+        <button onclick="prevTrack('nature')" class="btn">⏮ Prev</button>
+        <button onclick="nextTrack('nature')" class="btn">⏭ Next</button>
+      </div>
+    </div>
+
+    <!-- Sleep & Healing -->
+    <div class="music-card bg-gradient-to-br from-pink-200 to-pink-400 rounded-3xl shadow-lg p-8 flex flex-col items-center">
+      <h3 class="text-2xl font-bold text-pink-900 mb-4">💤 Sleep & Healing</h3>
+      <p id="sleepTitle" class="text-gray-900 mb-3 font-medium">🌙 Night Lullaby</p>
+      <audio id="sleepPlayer" controls class="w-full rounded-lg shadow-md mb-4"></audio>
+      <div class="flex gap-4">
+        <button onclick="prevTrack('sleep')" class="btn">⏮ Prev</button>
+        <button onclick="nextTrack('sleep')" class="btn">⏭ Next</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- JS -->
+  <script>
+    // Playlists
+    const playlists = {
+      calm: [
+        { title: "🌸 Peaceful Mind", src: "audio/calm1.mp3" },
+        { title: "☁️ Gentle Waves", src: "audio/calm2.mp3" },
+        { title: "🍃 Deep Calm", src: "audio/calm3.mp3" }
+      ],
+      nature: [
+        { title: "🌧️ Rain & Thunder", src: "audio/nature1.mp3" },
+        { title: "🐦 Birds & Forest", src: "audio/nature2.mp3" },
+        { title: "🌊 Ocean Waves", src: "audio/nature3.mp3" }
+      ],
+      sleep: [
+        { title: "🌙 Night Lullaby", src: "audio/sleep1.mp3" },
+        { title: "✨ Dream Flow", src: "audio/sleep2.mp3" },
+        { title: "🕊️ Soft Piano", src: "audio/sleep3.mp3" }
+      ]
+    };
+
+    // Track indexes
+    let indexes = { calm: 0, nature: 0, sleep: 0 };
+
+    function loadTrack(category) {
+      const player = document.getElementById(`${category}Player`);
+      const title = document.getElementById(`${category}Title`);
+      const track = playlists[category][indexes[category]];
+      player.src = track.src;
+      title.textContent = track.title;
+      player.play();
+    }
+
+    function nextTrack(category) {
+      indexes[category] = (indexes[category] + 1) % playlists[category].length;
+      loadTrack(category);
+    }
+
+    function prevTrack(category) {
+      indexes[category] = (indexes[category] - 1 + playlists[category].length) % playlists[category].length;
+      loadTrack(category);
+    }
+
+    // Auto-play next when ended
+    ["calm", "nature", "sleep"].forEach(cat => {
+      const player = document.getElementById(`${cat}Player`);
+      player.addEventListener("ended", () => nextTrack(cat));
+      loadTrack(cat); // Load first track
+    });
+  </script>
+
+</body>
+</html>
+{% endblock body %}

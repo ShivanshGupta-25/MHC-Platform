@@ -1,0 +1,143 @@
+{% extends 'components/base.html' %}
+{% block title %}
+Mental Wellness Platform
+{% endblock title %}
+{% block body %}
+<script src="https://cdn.tailwindcss.com"></script>
+<body class="bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 min-h-screen font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-indigo-600">Mental Wellness Platform</h1>
+      <ul class="flex space-x-6 text-gray-700 font-medium">
+        <li><a href="#" class="hover:text-indigo-600">Home</a></li>
+        <li><a href="#" class="hover:text-indigo-600">About</a></li>
+        <li><a href="#" class="hover:text-red-500">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="text-center py-12">
+    <h2 class="text-4xl font-bold text-gray-800">Welcome back, <span class="text-indigo-600">User 🌸</span></h2>
+    <p class="mt-3 text-gray-600">Your safe space for healing, growth, and positivity</p>
+  </header>
+
+  <!-- Dashboard Grid -->
+  <main class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+    <!-- Chatbot -->
+    <section class="bg-white shadow-lg rounded-2xl p-6 hover:shadow-xl transition">
+      <h3 class="text-xl font-semibold text-indigo-600 mb-3">💬 AI Chatbot</h3>
+      <p class="text-gray-600 mb-4">Talk with our empathetic AI assistant 24/7 — always here to listen, guide, and support.</p>
+      <button id="chatbotBtn" class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600">Start Chat</button>
+    </section>
+
+    <!-- Mindfulness Meditation -->
+    <section class="bg-white shadow-lg rounded-2xl p-6 hover:shadow-xl transition">
+      <h3 class="text-xl font-semibold text-purple-600 mb-3">🧘 Mindfulness Meditation and Wellness Practices</h3>
+      <p class="text-gray-600 mb-4">Practice mindfulness and reduce stress with guided meditations and other wellness activities.</p>
+      <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Explore</button>
+    </section>
+    <!-- Music Therapy -->
+    <section class="bg-white shadow-lg rounded-2xl p-6 hover:shadow-xl transition">
+      <h3 class="text-xl font-semibold text-pink-600 mb-3">🎵 Music Therapy</h3>
+      <p class="text-gray-600 mb-4">R🎶 Relax with curated playlists for stress relief and focus.  
+Let calming tunes and mindful beats guide you to a better headspace.</p>
+      <button class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600">Listen Now</button>
+    </section>
+
+    <!-- Mood Tracker -->
+    <section class="bg-white shadow-lg rounded-2xl p-6 hover:shadow-xl transition">
+      <h3 class="text-xl font-semibold text-yellow-600 mb-3">📊 Mood Tracker</h3>
+      <p class="text-gray-600 mb-4">Log your daily mood and track your mental health journey.</p>
+      <button class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Track Mood</button>
+    </section>
+
+    <!-- Journaling -->
+    <section class="bg-white shadow-lg rounded-2xl p-6 hover:shadow-xl transition">
+      <h3 class="text-xl font-semibold text-purple-600 mb-3">📓 Journaling</h3>
+      <p class="text-gray-600 mb-4">Express your feelings and maintain a private diary.</p>
+      <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Write Now</button>
+    </section>
+
+    <!-- Emergency Help -->
+    <section class="bg-white shadow-lg rounded-2xl p-6 hover:shadow-xl transition">
+      <h3 class="text-xl font-semibold text-red-600 mb-3">🚨 Emergency Help</h3>
+      <p class="text-gray-600 mb-4">Quick access to helplines and immediate support.</p>
+      <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Get Help</button>
+    </section>
+
+  </main>
+
+  <!-- Floating Chatbot Button -->
+  <button id="chatbotBtn" class="fixed bottom-6 right-6 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition">
+    💬
+  </button>
+
+  <!-- Chatbot Window -->
+  <div id="chatbotWindow" class="hidden fixed bottom-20 right-6 w-80 bg-white shadow-2xl rounded-2xl overflow-hidden">
+    <div class="bg-indigo-600 text-white p-4 flex justify-between items-center">
+      <h4 class="font-semibold">AI Chatbot 🌸</h4>
+      <button id="closeChat" class="text-white text-lg">✖</button>
+    </div>
+    <div id="chatMessages" class="h-64 p-4 overflow-y-auto text-sm text-gray-700 space-y-2">
+      <p class="bg-indigo-100 p-2 rounded-lg w-fit">Hi! I'm here to listen 💜</p>
+    </div>
+    <div class="p-3 flex border-t">
+      <input id="chatInput" type="text" placeholder="Type a message..." 
+        class="flex-grow border rounded-lg px-3 py-2 text-sm focus:outline-none">
+      <button id="sendMsg" class="ml-2 bg-indigo-600 text-white px-4 rounded-lg">Send</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-6 mt-12">
+    <div class="container mx-auto px-6 flex flex-row md:flex-row justify-between items-center">
+      <p class="text-center text-gray-500">Team TechGenics</p>
+    </div>
+  </footer>
+
+  <!-- JS for Chatbot -->
+  <script>
+    const chatbotBtn = document.getElementById('chatbotBtn');
+    const chatbotWindow = document.getElementById('chatbotWindow');
+    const closeChat = document.getElementById('closeChat');
+    const sendMsg = document.getElementById('sendMsg');
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
+
+    chatbotBtn.addEventListener('click', () => {
+      chatbotWindow.classList.remove('hidden');
+    });
+
+    closeChat.addEventListener('click', () => {
+      chatbotWindow.classList.add('hidden');
+    });
+
+    sendMsg.addEventListener('click', () => {
+      const msg = chatInput.value.trim();
+      if (msg) {
+        const userMsg = document.createElement('p');
+        userMsg.className = "bg-gray-200 p-2 rounded-lg w-fit self-end ml-auto";
+        userMsg.textContent = msg;
+        chatMessages.appendChild(userMsg);
+
+        // Auto-reply (demo)
+        setTimeout(() => {
+          const botMsg = document.createElement('p');
+          botMsg.className = "bg-indigo-100 p-2 rounded-lg w-fit";
+          botMsg.textContent = "💡 I hear you. Let's work through this together.";
+          chatMessages.appendChild(botMsg);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 800);
+
+        chatInput.value = "";
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    });
+  </script>
+</body>
+</html>
+{% endblock body %}
