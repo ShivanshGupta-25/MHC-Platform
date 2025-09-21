@@ -278,8 +278,9 @@ Mental Wellness Platform
         <div class="chat-message chat-bot">👋 Hi there! What can I do for you today?</div>
       </div>
       <div class="input-area">
+        <input type="hidden" id="csrf-token" value="{{ csrf_token() }}">
         <input type="text" id="user-input" class="input-box" placeholder="Type a message…">
-        <button class="send-button" onclick="sendMessage()">Send</button>
+        <button class="send-button" id="send-btn" onclick="sendMessage()">Send</button>
       </div>
     </div>
   </div>
@@ -317,46 +318,66 @@ Mental Wellness Platform
 
     const userInputEl = document.getElementById('user-input');
     const chatContainer = document.getElementById('chat-container');
+    const sendBtn = document.getElementById('send-btn');
 
-    function sendMessage() {
-      const text = userInputEl.value.trim();
-      if (!text) return;
+    async function sendMessage() {
+  const userInputEl = document.getElementById('user-input');
+  const chatContainer = document.getElementById('chat-container');
+  const userInput = userInputEl.value.trim();
+  if (!userInput) return;
 
-      const userEl = document.createElement('div');
-      userEl.classList.add('chat-message', 'chat-user');
-      userEl.textContent = text;
-      chatContainer.appendChild(userEl);
+  // Append user message immediately
+  const userMessageDiv = document.createElement('div');
+  userMessageDiv.classList.add('chat-message', 'chat-user');
+  userMessageDiv.textContent = userInput;
+  chatContainer.appendChild(userMessageDiv);
 
-      userInputEl.value = '';
-      chatContainer.scrollTop = chatContainer.scrollHeight;
+  // Clear input right away to improve UX
+  userInputEl.value = '';
 
-      // 🔁 Send message to backend
-      fetch('{{url_for("send_message")}}', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ message: text })
-      })
-        .then(response => response.json())
-        .then(data => {
-          // Create bot reply from server response
-          const botEl = document.createElement('div');
-          botEl.classList.add('chat-message', 'chat-bot');
-          botEl.textContent = data.response;
-          chatContainer.appendChild(botEl);
-          chatContainer.scrollTop = chatContainer.scrollHeight;
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-    }
-
-    userInputEl.addEventListener("keypress", function (e) {
-      if (e.key === "Enter") sendMessage();
+  try {
+    const response = await fetch('/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.getElementById('csrf-token').value, // Ensure this matches your backend config
+      },
+      body: JSON.stringify({ message: userInput }),
     });
 
-    function logout() { alert('Logged out!'); }
+    if (!response.ok) {
+      const errorData = await response.json();
+      alert('Error: ' + (errorData.error || 'Unknown error'));
+      return;
+    }
+
+    const data = await response.json();
+
+    // Append bot response
+    const botMessageDiv = document.createElement('div');
+    botMessageDiv.classList.add('chat-message', 'chat-bot');
+    botMessageDiv.textContent = data.response || "Sorry, no response received.";
+    chatContainer.appendChild(botMessageDiv);
+
+    // Scroll to bottom
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+
+  } catch (err) {
+    alert('Failed to send message: ' + err.message);
+  }
+}
+
+
+    function logout() {
+      alert('Logged out!');
+    }
+
+    // Optionally submit on pressing Enter key
+    userInputEl.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !sendBtn.disabled) {
+        sendMessage();
+      }
+    });
   </script>
 </body>
 
