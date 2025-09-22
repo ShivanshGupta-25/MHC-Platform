@@ -2,6 +2,7 @@
 {% block title %}
 Mental Wellness Platform
 {% endblock title %}
+
 {% block body %}
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
@@ -177,6 +178,10 @@ Mental Wellness Platform
     display: flex;
     flex-direction: column;
     gap: 10px;
+    height: calc(100% - 80px);
+    /* Adjust for input area and margin */
+    max-height: 500px;
+    /* Optional: Limit maximum height */
   }
 
   .chat-message {
@@ -320,52 +325,59 @@ Mental Wellness Platform
     const chatContainer = document.getElementById('chat-container');
     const sendBtn = document.getElementById('send-btn');
 
-    async function sendMessage() {
-  const userInputEl = document.getElementById('user-input');
-  const chatContainer = document.getElementById('chat-container');
-  const userInput = userInputEl.value.trim();
-  if (!userInput) return;
-
-  // Append user message immediately
-  const userMessageDiv = document.createElement('div');
-  userMessageDiv.classList.add('chat-message', 'chat-user');
-  userMessageDiv.textContent = userInput;
-  chatContainer.appendChild(userMessageDiv);
-
-  // Clear input right away to improve UX
-  userInputEl.value = '';
-
-  try {
-    const response = await fetch('/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': document.getElementById('csrf-token').value, // Ensure this matches your backend config
-      },
-      body: JSON.stringify({ message: userInput }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      alert('Error: ' + (errorData.error || 'Unknown error'));
-      return;
+    // Helper function to safely convert plain text with newlines to HTML with <br>
+    function formatBotResponse(text) {
+      // Basic HTML escaping to avoid XSS risks
+      const div = document.createElement('div');
+      div.textContent = text;
+      // Replace newline characters with <br> tags
+      return div.innerHTML.replace(/\n/g, '<br>');
     }
 
-    const data = await response.json();
+    async function sendMessage() {
+      const userInput = userInputEl.value.trim();
+      if (!userInput) return;
 
-    // Append bot response
-    const botMessageDiv = document.createElement('div');
-    botMessageDiv.classList.add('chat-message', 'chat-bot');
-    botMessageDiv.textContent = data.response || "Sorry, no response received.";
-    chatContainer.appendChild(botMessageDiv);
+      // Append user message immediately
+      const userMessageDiv = document.createElement('div');
+      userMessageDiv.classList.add('chat-message', 'chat-user');
+      userMessageDiv.textContent = userInput;
+      chatContainer.appendChild(userMessageDiv);
 
-    // Scroll to bottom
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+      // Clear input right away to improve UX
+      userInputEl.value = '';
 
-  } catch (err) {
-    alert('Failed to send message: ' + err.message);
-  }
-}
+      try {
+        const response = await fetch('/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.getElementById('csrf-token').value,
+          },
+          body: JSON.stringify({ message: userInput }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          alert('Error: ' + (errorData.error || 'Unknown error'));
+          return;
+        }
+
+        const data = await response.json();
+
+        // Append bot response with formatted HTML (preserving line breaks)
+        const botMessageDiv = document.createElement('div');
+        botMessageDiv.classList.add('chat-message', 'chat-bot');
+        botMessageDiv.innerHTML = formatBotResponse(data.response || "Sorry, no response received.");
+        chatContainer.appendChild(botMessageDiv);
+
+        // Scroll to bottom
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+      } catch (err) {
+        alert('Failed to send message: ' + err.message);
+      }
+    }
 
 
     function logout() {
@@ -373,13 +385,12 @@ Mental Wellness Platform
     }
 
     // Optionally submit on pressing Enter key
-    userInputEl.addEventListener('keydown', function(e) {
+    userInputEl.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && !sendBtn.disabled) {
         sendMessage();
       }
     });
   </script>
-</body>
 
-</html>
+</body>
 {% endblock body %}
